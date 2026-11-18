@@ -6,7 +6,7 @@ Noisy GPS points are matched to road segments: candidate arcs are generated per 
 
 ## Team
 | Member | SRN |
-|---|---|---|
+|---|---|
 | Rehan S. Bawakhan | PES2UG25CS820 |
 | Narendra Kathare| PES2UG25CS814 |
 | Eshwar B H | PES2UG25CS808 |
