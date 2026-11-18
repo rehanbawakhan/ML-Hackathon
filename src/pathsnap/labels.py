@@ -52,3 +52,14 @@ def align_route(P: np.ndarray, net: Network, route: np.ndarray, chunk: int = 256
     arc = route[j]
     d_final, _ = point_segment(P, net.a[arc], net.b[arc])
     return j, net.canon[arc], d_final
+
+
+def reference_point_arcs(trip, cfg=None):
+    """Per-point reference arc for a trip with a .route (evaluation only)."""
+    from .geo import project, utm_transformer
+    from .network import build_network
+    tf = utm_transformer(trip.track[:, 0].mean(), trip.track[:, 1].mean())
+    P = project(tf, trip.track[:, :2])
+    net = build_network(project(tf, trip.nodes), trip.arcs)
+    _, arc, d = align_route(P, net, trip.route)
+    return arc, d, net

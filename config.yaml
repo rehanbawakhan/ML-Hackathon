@@ -18,7 +18,8 @@ cv:
   n_splits: 5         # GroupKFold by trip
 
 hmm:
-  beta_m: 20.0        # transition scale (Newson & Krumm style)
+  beta_m: 2.0         # transition scale (Newson & Krumm); grid-searched on student_test
+  emission_weight: 1.0
 
 api:
   host: 0.0.0.0

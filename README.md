@@ -6,10 +6,10 @@ Noisy GPS points are matched to road segments: candidate arcs are generated per 
 
 ## Team
 | Member | SRN | Ownership |
-|---|---|
-| Rehan S. Bawakhan | PES2UG25CS820 |
-| Narendra | PES2UG25CS814 |
-| Eshwar | PES2UG25CS808 |
+|---|---|---|
+| Rehan S. Bawakhan | PES2UG25CS820 | |
+| | | |
+| | | |
 
 ## Repository layout
 ```
@@ -51,6 +51,10 @@ python scripts/build_dataset.py     # labels + candidates + features -> data/pro
 python scripts/eda.py               # EDA tables, plots, Folium maps -> results/
 python scripts/train_models.py      # 6 models, GroupKFold CV + student_test -> experiments/logs/ (~5 min)
 ```
+```bash
+python scripts/tune_optuna.py       # Bayesian HPO of LightGBM -> experiments/optuna/, models/artifacts/final_model.joblib (~10 min)
+python scripts/evaluate_hmm.py      # classifier-only vs classifier + HMM/Viterbi -> experiments/logs/, models/artifacts/hmm_config.yaml
+```
 `train_models.py --models lgbm rf` re-runs only some models; results merge into `experiments/logs/model_comparison.csv`.
 
 ### Pipeline summary
@@ -61,6 +65,24 @@ python scripts/train_models.py      # 6 models, GroupKFold CV + student_test -> 
 5. **Candidates:** arcs within `candidates.radius_m` of each point, nearest `max_k` kept; if none, nearest arcs are taken and flagged (`cand_expanded`).
 6. **Features:** distance and distance rank, GPS-heading vs arc-direction difference, speed, projection position, arc length, node degrees, two-way flag, distance of the same arc to neighbouring points, connectivity to neighbouring points' nearest arcs, time gaps.
 7. **Models:** binary "is this candidate the reference arc?" classifiers; Top-1 = highest probability candidate per point.
+
+## Two-laptop deployment
+**Laptop 1 — API** (has the repo, trained artifacts and `data/raw/eval/`):
+```bash
+ipconfig                                         # note the IPv4 address, e.g. 192.168.1.20
+netsh advfirewall firewall add rule name="PathSnap API" dir=in action=allow protocol=TCP localport=8000   # admin terminal, once
+uvicorn api.main:app --host 0.0.0.0 --port 8000
+```
+Every request and its result is logged in this terminal and in `api/logs/requests.log`.
+
+**Laptop 2 — UI** (repo cloned, `pip install -r requirements.txt`, no data needed):
+```bash
+streamlit run ui/app.py
+```
+Enter `http://<laptop-1-IP>:8000`, click **Connect**, pick a trip, click **Run map-matching**.
+
+Endpoints: `GET /health`, `GET /trips`, `POST /predict {"trip_id": "00000015"}`.
+Ground truth is read only inside the API's scoring step after prediction and is never sent to the UI.
 
 ## Data partitions & leakage rules
 - Train (80 trips): fitting, cross-validation (GroupKFold by trip), Bayesian optimisation.
