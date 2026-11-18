@@ -5,11 +5,11 @@ UE24CS352A Machine Learning Hackathon, PES University (18 Nov 2026).
 Noisy GPS points are matched to road segments: candidate arcs are generated per GPS point, a classifier scores each candidate, and HMM/Viterbi decoding reconstructs a connected route. Served via a FastAPI backend (Laptop 1) and an evaluator UI (Laptop 2).
 
 ## Team
-| Member | SRN | 
+| Member | SRN | Ownership |
 |---|---|
 | Rehan S. Bawakhan | PES2UG25CS820 |
-| Narendra Kathare | PES2UG25CS814 |
-| Eshwar B H | PES2UG25CS808 |
+| Narendra | PES2UG25CS814 |
+| Eshwar | PES2UG25CS808 |
 
 ## Repository layout
 ```
@@ -45,7 +45,22 @@ data/raw/eval/...            # evaluator trips, Laptop 1 only
 ```
 
 ## Running
-_To be filled in as pipeline steps are added._
+From the repo root, in order:
+```bash
+python scripts/build_dataset.py     # labels + candidates + features -> data/processed/ (~1 min)
+python scripts/eda.py               # EDA tables, plots, Folium maps -> results/
+python scripts/train_models.py      # 6 models, GroupKFold CV + student_test -> experiments/logs/ (~5 min)
+```
+`train_models.py --models lgbm rf` re-runs only some models; results merge into `experiments/logs/model_comparison.csv`.
+
+### Pipeline summary
+1. **Projection:** each trip is projected to its own UTM zone (pyproj), so all distances are in metres.
+2. **Network cleaning:** duplicate (from,to) arcs are mapped to one canonical id; self-loops and zero-length arcs are dropped from candidates.
+3. **Gap handling:** the track is split into segments where the time gap exceeds `gaps.break_seconds`.
+4. **Per-point labels:** `.route` is only the ordered arc list, so each GPS point is assigned a route position by a monotone dynamic-programming alignment (positions never move backwards) minimising total point-to-arc distance. See `src/pathsnap/labels.py`.
+5. **Candidates:** arcs within `candidates.radius_m` of each point, nearest `max_k` kept; if none, nearest arcs are taken and flagged (`cand_expanded`).
+6. **Features:** distance and distance rank, GPS-heading vs arc-direction difference, speed, projection position, arc length, node degrees, two-way flag, distance of the same arc to neighbouring points, connectivity to neighbouring points' nearest arcs, time gaps.
+7. **Models:** binary "is this candidate the reference arc?" classifiers; Top-1 = highest probability candidate per point.
 
 ## Data partitions & leakage rules
 - Train (80 trips): fitting, cross-validation (GroupKFold by trip), Bayesian optimisation.

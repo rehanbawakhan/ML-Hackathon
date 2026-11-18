@@ -20,4 +20,4 @@ Thumbs.db
 *.key
 
 # large intermediates (uncomment if they exceed GitHub limits)
-# data/processed/*.parquet
+data/processed/*.parquet
