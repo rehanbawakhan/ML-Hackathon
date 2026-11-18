@@ -1,0 +1,36 @@
+{
+  "model": "LightGBM (Optuna-tuned)",
+  "features": [
+    "dist",
+    "dist_rank",
+    "dist_minus_min",
+    "dist_ratio",
+    "n_cand",
+    "head_diff",
+    "head_diff_undir",
+    "speed",
+    "step_len",
+    "proj_t",
+    "arc_len",
+    "from_in_deg",
+    "to_out_deg",
+    "has_reverse",
+    "nb_dist_mean",
+    "nb_dist_max",
+    "conn_prev",
+    "conn_next",
+    "dt_prev",
+    "dt_next",
+    "cand_expanded"
+  ],
+  "params": {
+    "n_estimators": 250,
+    "learning_rate": 0.03177157283848238,
+    "num_leaves": 41,
+    "min_child_samples": 9,
+    "subsample": 0.9830551228439244,
+    "colsample_bytree": 0.5377650349749697,
+    "reg_lambda": 1.132893619619655,
+    "subsample_freq": 1
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "best_params": {
+    "n_estimators": 250,
+    "learning_rate": 0.03177157283848238,
+    "num_leaves": 41,
+    "min_child_samples": 9,
+    "subsample": 0.9830551228439244,
+    "colsample_bytree": 0.5377650349749697,
+    "reg_lambda": 1.132893619619655,
+    "subsample_freq": 1
+  },
+  "best_cv_log_loss": 0.10953133872701107,
+  "n_trials": 25,
+  "search_seconds": 238.8378713130951,
+  "sampler": "TPE",
+  "seed": 42,
+  "objective": "minimise GroupKFold CV log loss"
+}
