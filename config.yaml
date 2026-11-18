@@ -1,0 +1,25 @@
+# Central config; values here are starting points to be tuned/justified.
+paths:
+  raw: data/raw
+  processed: data/processed
+  artifacts: models/artifacts
+  results: results
+
+seed: 42
+
+candidates:
+  radius_m: 75        # search radius around each GPS point
+  max_k: 8            # keep nearest k arcs
+
+gaps:
+  break_seconds: 60   # split trajectory into segments above this time gap
+
+cv:
+  n_splits: 5         # GroupKFold by trip
+
+hmm:
+  beta_m: 20.0        # transition scale (Newson & Krumm style)
+
+api:
+  host: 0.0.0.0
+  port: 8000
