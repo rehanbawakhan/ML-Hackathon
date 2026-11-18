@@ -5,11 +5,11 @@ UE24CS352A Machine Learning Hackathon, PES University (18 Nov 2026).
 Noisy GPS points are matched to road segments: candidate arcs are generated per GPS point, a classifier scores each candidate, and HMM/Viterbi decoding reconstructs a connected route. Served via a FastAPI backend (Laptop 1) and an evaluator UI (Laptop 2).
 
 ## Team
-| Member | SRN | Ownership |
+| Member | SRN |
 |---|---|---|
-| Rehan S. Bawakhan | PES2UG25CS820 | |
-| Narendra Kathare| PES2UG25CS814 | |
-| Eshwar B H | PES2UG25CS808 | |
+| Rehan S. Bawakhan | PES2UG25CS820 |
+| Narendra Kathare| PES2UG25CS814 |
+| Eshwar B H | PES2UG25CS808 |
 
 ## Repository layout
 ```
